@@ -1,0 +1,41 @@
+{
+  "sessions": [
+    { "id": 0, "date": "2026-08-06", "label": "06 Ago", "image": "Assents/Listas/01. Aug 06 2026.jpg", "type": "class" },
+    { "id": 1, "date": "2026-08-13", "label": "13 Ago", "image": "Assents/Listas/02. Aug 13 2026.jpg", "type": "class" },
+    { "id": 2, "date": "2026-08-20", "label": "20 Ago", "image": "Assents/Listas/03. Aug 20 2026.jpg", "type": "class" },
+    { "id": 3, "date": "2026-08-27", "label": "27 Ago", "type": "assignment" },
+    { "id": 4, "date": "2026-09-03", "label": "03 Sep", "image": "Assents/Listas/04. Sep 03 2026.jpg", "type": "class" },
+    { "id": 5, "date": "2026-09-10", "label": "10 Sep", "image": "Assents/Listas/05. Sep 10 2026.jpg", "type": "class" },
+    { "id": 6, "date": "2026-09-17", "label": "17 Sep", "image": "Assents/Listas/06. Sep 17 2026.jpg", "type": "class" },
+    { "id": 7, "date": "2026-09-24", "label": "24 Sep", "image": "Assents/Listas/07. Sep 24 2026.jpg", "type": "class" }
+  ],
+  "students": [
+    {"name": "DANNA VEGA VILLAMIZAR", "attendance": [true, true, true, null, true, false, true, true], "notes": {}},
+    {"name": "JENNIFER DAVILA PINZON", "attendance": [true, true, true, null, true, true, false, true], "notes": {}},
+    {"name": "JHONATAN SORIANO AGUIRRE", "attendance": [true, true, false, null, true, false, true, false], "notes": {}},
+    {"name": "JOSE DAVID FONSECA CASTRO", "attendance": [false, false, false, null, true, true, false, false], "notes": {}},
+    {"name": "JUAN ESTEBAN ARIAS TREJOS", "attendance": [false, true, true, null, true, true, false, true], "notes": {}},
+    {"name": "JUAN MARTINEZ ESPITIA", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+    {"name": "JUAN PABLO CORREDOR PALACIOS", "attendance": [true, false, true, null, false, false, false, false], "notes": {}},
+    {"name": "KAREN YULY MONTOYA BOLAÑOS", "attendance": [true, true, true, null, true, true, false, true], "notes": {}},
+    {"name": "KAROLL MICHAEL CASTRO GARCIA", "attendance": [false, true, false, null, true, false, true, true], "notes": {}},
+    {"name": "LAURA CAMILA GUIZA HERRERA", "attendance": [false, true, false, null, false, false, false, false], "notes": {}},
+    {"name": "LAURA SHANAIA HERNANDEZ GARCIA", "attendance": [true, true, true, null, true, false, true, true], "notes": {}},
+    {"name": "LUISA AYALA SALINAS", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+    {"name": "LUNA CALDERON RIVERA", "attendance": [true, true, true, null, true, false, true, true], "notes": {}},
+    {"name": "LUNA JIMENEZ SANTAMARIA", "attendance": [true, true, false, null, true, true, true, true], "notes": {}},
+    {"name": "MARIA PUENTES ROJAS", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+    {"name": "MARIA RIAÑO GALINDO", "attendance": [true, true, false, null, true, true, true, true], "notes": {}},
+    {"name": "MARIANA PINZON CHACON", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+    {"name": "MARIANA SILVA PORRAS", "attendance": [true, true, true, null, true, false, true, false], "notes": {}},
+    {"name": "MARTHA RODRIGUEZ PATIÑO", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+    {"name": "MARY ESCOBAR MEJIA", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+    {"name": "NICOL NIÑO POLANIA", "attendance": [true, true, true, null, true, true, true, false], "notes": {}},
+    {"name": "NICOLLE ALVAREZ HERRERA", "attendance": [true, false, true, null, true, false, true, true], "notes": {}},
+    {"name": "SARA CASTELLANOS HERNANDEZ", "attendance": [true, false, false, null, true, true, true, true], "notes": {}},
+    {"name": "VALENTINA VELANDIA RODRÍGUEZ", "attendance": [true, true, true, null, true, true, true, true], "notes": {"2": true, "4": true, "5": true}},
+    {"name": "VERONICA BENITEZ GOMEZ", "attendance": [true, true, true, null, false, true, true, true], "notes": {}},
+    {"name": "WILLIAM FONSECA VALERO", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+    {"name": "JUAN DAVID CASTELLANOS ROPERO", "attendance": [true, false, false, null, false, false, false, false], "notes": {}}
+  ]
+}

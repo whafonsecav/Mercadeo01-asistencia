@@ -28,24 +28,24 @@ Analiza la lista fotográfica fila por fila, y cruza los nombres con la base de 
 
 ---
 
-## 3. Actualización de Base de Datos Estática (`index.html`)
-El motor de base de datos reside en memoria directamente dentro del archivo `index.html`. Ábrelo y ubica los arreglos `sessions` y `students`.
+## 3. Actualización de Base de Datos Estática (`data.json`)
+La base de datos fue extraída del HTML por motivos de arquitectura y ahora reside limpiamente en `data.json`. Ábrelo y ubica los arreglos `"sessions"` y `"students"`.
 
 ### A) Actualizar `sessions`
 Añade un nuevo objeto al final del arreglo correspondiente al nuevo día. El `id` debe continuar la secuencia.
-```javascript
+```json
 // Ejemplo de adición:
-{ id: 8, date: "2026-10-01", label: "01 Oct", image: "Assents/Listas/08. Oct 01 2026.jpg", type: "class" }
+{ "id": 8, "date": "2026-10-01", "label": "01 Oct", "image": "Assents/Listas/08. Oct 01 2026.jpg", "type": "class" }
 ```
-*(Nota: Si el usuario te indica que hubo un día sin lista física debido a una tarea u otro evento, asígnale `type: "assignment"` y omite el campo `image`, como se hizo con el 27 de agosto).*
+*(Nota: Si el usuario te indica que hubo un día sin lista física debido a una tarea u otro evento, asígnale `"type": "assignment"` y omite el campo `"image"`, como se hizo con el 27 de agosto).*
 
 ### B) Actualizar `students`
-Itera sobre todos los objetos del arreglo `students`.
-1. **Asistencia Pura**: Agrega un valor booleano (`true` o `false`) al final de su arreglo `attendance` correspondiente a la clase recién creada.
-2. **Alertas de Cédula**: Si en el paso 2 detectaste que alguien olvidó poner la cédula, ubica la llave `notes` de ese estudiante y asígnale `true` utilizando el **ID numérico de la sesión** como llave.
-```javascript
+Itera sobre todos los objetos del arreglo `"students"`.
+1. **Asistencia Pura**: Agrega un valor booleano (`true` o `false`) al final de su arreglo `"attendance"` correspondiente a la clase recién creada.
+2. **Alertas de Cédula**: Si en el paso 2 detectaste que alguien olvidó poner la cédula, ubica la llave `"notes"` de ese estudiante y asígnale `true` utilizando el **ID numérico de la sesión** como llave (en formato string por ser JSON).
+```json
 // Ejemplo: La estudiante olvidó la cédula en la sesión ID 8.
-{"name": "VALENTINA VELANDIA RODRÍGUEZ", "attendance": [true, true, ..., true], "notes": {"2": true, "4": true, "8": true}}
+{"name": "VALENTINA VELANDIA RODRÍGUEZ", "attendance": [true, true, true], "notes": {"2": true, "4": true, "8": true}}
 ```
 
 ---
