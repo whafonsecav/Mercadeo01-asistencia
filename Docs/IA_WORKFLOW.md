@@ -8,13 +8,20 @@ Por favor, sigue **rigurosamente** estos pasos para mantener la integridad del s
 
 ---
 
-## 1. Recepción, Detección y Renombrado de la Imagen
+## 1. Recepción, Anonimización y Renombrado de la Imagen
+Por seguridad de datos personales, **ninguna lista debe publicarse en crudo**. El proyecto cuenta con un script de Computer Vision que aplica un difuminado inteligente.
+
 1. **Recepción**: El usuario te entregará una imagen adjunta o te indicará en qué directorio local se encuentra.
-2. **Análisis de Fecha**: Inspecciona visualmente la imagen escaneada para encontrar la fecha escrita a mano (usualmente en la esquina superior derecha o en la cabecera).
-3. **Renombrado**: Mueve/Copia la imagen y guárdala en el repositorio local dentro de la carpeta `Assents/Listas/`.
-4. **Regla de Nomenclatura**: Debes seguir el formato secuencial exacto que ya existe:
+2. **Análisis de Fecha**: Inspecciona visualmente la imagen escaneada para encontrar la fecha escrita a mano.
+3. **Guardado en Crudo**: Guarda la imagen original dentro de la carpeta `Assents/Listas_Crudas/`.
+4. **Regla de Nomenclatura**: Debes renombrar la imagen usando el formato secuencial exacto:
    `[Número Secuencial]. [Mes en Inglés 3 letras] [Día] [Año].jpg`
-   *Ejemplo*: Si la última lista fue `07. Sep 24 2026.jpg`, la nueva lista se llamará `08. Oct 01 2026.jpg`.
+   *Ejemplo*: `08. Oct 01 2026.jpg`.
+5. **Procesamiento de Anonimización**: DEBES ejecutar por consola el script de Python que lee las imágenes crudas, detecta la tinta, y pixela la mitad de las cédulas y firmas protegiendo los cuadros en blanco:
+```powershell
+python Docs/anonymize.py
+```
+*(El script tomará la nueva imagen en `Listas_Crudas` y automáticamente generará la versión censurada en la carpeta pública `Assents/Listas/`).*
 
 ---
 
