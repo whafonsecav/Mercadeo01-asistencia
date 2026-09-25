@@ -1,13 +1,13 @@
 {
   "sessions": [
-    { "id": 0, "date": "2026-08-06", "label": "06 Ago", "image": "Assents/Listas/01. Aug 06 2026.jpg", "type": "class" },
-    { "id": 1, "date": "2026-08-13", "label": "13 Ago", "image": "Assents/Listas/02. Aug 13 2026.jpg", "type": "class" },
-    { "id": 2, "date": "2026-08-20", "label": "20 Ago", "image": "Assents/Listas/03. Aug 20 2026.jpg", "type": "class" },
+    { "id": 0, "date": "2026-08-06", "label": "06 Ago", "image": "Assents/Listas/01. Aug 06 2026.jpg?v=2", "type": "class" },
+    { "id": 1, "date": "2026-08-13", "label": "13 Ago", "image": "Assents/Listas/02. Aug 13 2026.jpg?v=2", "type": "class" },
+    { "id": 2, "date": "2026-08-20", "label": "20 Ago", "image": "Assents/Listas/03. Aug 20 2026.jpg?v=2", "type": "class" },
     { "id": 3, "date": "2026-08-27", "label": "27 Ago", "type": "assignment" },
-    { "id": 4, "date": "2026-09-03", "label": "03 Sep", "image": "Assents/Listas/04. Sep 03 2026.jpg", "type": "class" },
-    { "id": 5, "date": "2026-09-10", "label": "10 Sep", "image": "Assents/Listas/05. Sep 10 2026.jpg", "type": "class" },
-    { "id": 6, "date": "2026-09-17", "label": "17 Sep", "image": "Assents/Listas/06. Sep 17 2026.jpg", "type": "class" },
-    { "id": 7, "date": "2026-09-24", "label": "24 Sep", "image": "Assents/Listas/07. Sep 24 2026.jpg", "type": "class" }
+    { "id": 4, "date": "2026-09-03", "label": "03 Sep", "image": "Assents/Listas/04. Sep 03 2026.jpg?v=2", "type": "class" },
+    { "id": 5, "date": "2026-09-10", "label": "10 Sep", "image": "Assents/Listas/05. Sep 10 2026.jpg?v=2", "type": "class" },
+    { "id": 6, "date": "2026-09-17", "label": "17 Sep", "image": "Assents/Listas/06. Sep 17 2026.jpg?v=2", "type": "class" },
+    { "id": 7, "date": "2026-09-24", "label": "24 Sep", "image": "Assents/Listas/07. Sep 24 2026.jpg?v=2", "type": "class" }
   ],
   "students": [
     {"name": "DANNA VEGA VILLAMIZAR", "attendance": [true, true, true, null, true, false, true, true], "notes": {}},
