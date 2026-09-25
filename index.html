@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Asistencia Mercadeo 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        poli: { navy: '#00205B', blue: '#00A5D9', green: '#82B135' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f1f5f9; color: #334155; }
+        
+        /* Table Scroll container */
+        .table-container {
+            width: 100%; overflow-x: auto;
+            scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;
+        }
+        .table-container::-webkit-scrollbar { height: 6px; }
+        .table-container::-webkit-scrollbar-track { background: transparent; }
+        .table-container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+
+        table { border-collapse: separate; border-spacing: 0; width: 100%; }
+        th, td { white-space: nowrap; vertical-align: middle; }
+        
+        /* Sticky Column indicating scroll with shadow and border */
+        .sticky-col { 
+            position: sticky; left: 0; z-index: 10; background: white; 
+            border-right: 2px solid #e2e8f0;
+            box-shadow: 3px 0 5px -2px rgba(0,0,0,0.05);
+        }
+        .sticky-header { position: sticky; top: 0; z-index: 20; background: white; }
+        .sticky-corner { 
+            position: sticky; top: 0; left: 0; z-index: 30; background: white;
+            border-right: 2px solid #e2e8f0;
+        }
+
+        .row-hover:hover td { background-color: #f8fafc !important; }
+        
+        /* Tooltips */
+        .tooltip .tooltip-text { visibility: hidden; opacity: 0; transition: opacity 0.2s; }
+        .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
+
+        /* Sleek Modal */
+        #modal-image-container { overflow: hidden; position: relative; cursor: grab; width: 100%; height: 100%; }
+        #modal-image-container:active { cursor: grabbing; }
+        #modal-image { 
+            position: absolute; 
+            top: 50%; left: 50%; 
+            transform: translate(-50%, -50%) scale(1); 
+            max-width: 95vw; max-height: 85vh; 
+            object-fit: contain;
+            will-change: transform; 
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Header Súper Compacto -->
+    <header class="bg-poli-navy text-white shadow relative z-40 border-b-2 border-poli-blue">
+        <div class="max-w-[1200px] mx-auto px-4 py-2 md:py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <img src="Assents/Logo/politecnico-w.png" alt="Poli" class="h-8 md:h-10 object-contain" onerror="this.src='Assents/Logo/politecnico-w.webp'">
+                <div>
+                    <h1 class="text-base md:text-lg font-bold leading-tight tracking-tight">Asistencia Mercadeo 1</h1>
+                    <p class="text-[9px] md:text-[10px] text-blue-200 font-medium">Grupo 201 • Sede Bogotá • Nocturno • Jueves • Prof. Jennifer Florez</p>
+                </div>
+            </div>
+            
+            <div class="flex gap-4 w-full md:w-auto justify-between md:justify-end">
+                <div class="text-center">
+                    <p class="text-[8px] md:text-[9px] text-blue-200 uppercase tracking-wider font-bold">Número de Estudiantes</p>
+                    <p class="font-bold text-sm md:text-base leading-none mt-0.5" id="stat-students">27</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-[8px] md:text-[9px] text-blue-200 uppercase tracking-wider font-bold">Número de Clases</p>
+                    <p class="font-bold text-sm md:text-base leading-none mt-0.5" id="stat-classes">7</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-[8px] md:text-[9px] text-poli-green uppercase tracking-wider font-bold">Promedio de Asistencia</p>
+                    <p class="font-bold text-sm md:text-base leading-none mt-0.5 text-poli-green" id="stat-avg">0%</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-[1200px] mx-auto w-full px-2 md:px-4 py-4 flex-1 flex flex-col">
+        
+        <!-- Leyendas Compactas -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Convenciones -->
+                <div>
+                    <h3 class="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Convenciones</h3>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <span class="flex items-center gap-1.5 text-xs text-gray-700">
+                            <i class="fa-solid fa-circle-check text-green-500"></i> Asistió
+                        </span>
+                        <span class="flex items-center gap-1.5 text-xs text-gray-700 tooltip relative cursor-help">
+                            <i class="fa-solid fa-circle-check text-yellow-400"></i> 
+                            <span class="border-b border-dashed border-gray-300">Asistió (No Cédula)</span>
+                            <span class="tooltip-text absolute bottom-full left-0 mb-1 w-48 bg-gray-800 text-white text-[10px] p-1.5 rounded text-center z-50">
+                                Olvidó diligenciar su cédula en la lista física.
+                            </span>
+                        </span>
+                        <span class="flex items-center gap-1.5 text-xs text-gray-700">
+                            <i class="fa-solid fa-circle-xmark text-red-400"></i> Ausente
+                        </span>
+                        <span class="flex items-center gap-1.5 text-xs text-gray-700">
+                            <i class="fa-solid fa-ban text-gray-300"></i> No Hubo Clase
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Niveles -->
+                <div>
+                    <h3 class="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Niveles de Asistencia</h3>
+                    <div class="flex flex-wrap gap-2.5" id="rank-legend">
+                        <!-- Inyectado por JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <p class="text-[10px] md:text-xs text-gray-500 text-right mb-1 mr-1">
+            <i class="fa-solid fa-camera mr-1"></i> Toca una fecha en la tabla para ver la lista original
+        </p>
+
+        <!-- Dashboard Table -->
+        <div class="table-container bg-white border border-gray-200 shadow-sm rounded-lg flex-1 relative">
+            <table class="w-full text-left">
+                <thead>
+                    <tr id="table-header" class="border-b border-gray-200 bg-gray-50">
+                        <th class="px-2 py-1.5 md:p-2 text-poli-navy font-bold sticky-corner uppercase text-[10px] border-b border-gray-200 min-w-[140px] md:min-w-[180px]">Estudiante</th>
+                        <th class="px-2 py-1.5 md:p-2 text-center text-gray-500 font-bold text-[10px] uppercase sticky-header border-b border-r border-gray-200 min-w-[70px]">Stats</th>
+                        <!-- Fechas dinámicas -->
+                    </tr>
+                </thead>
+                <tbody id="attendance-body" class="divide-y divide-gray-100">
+                    <!-- Filas dinámicas -->
+                </tbody>
+                <tfoot>
+                    <tr id="table-footer" class="bg-gray-50 text-gray-600">
+                        <!-- Totales dinámicos -->
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </main>
+
+    <!-- Modal Minimalista / Elegante -->
+    <div id="image-modal" class="fixed inset-0 z-50 hidden bg-black/95 flex flex-col opacity-0 transition-opacity duration-300">
+        
+        <!-- Header Flotante -->
+        <div class="absolute top-0 left-0 w-full p-3 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent z-30 pointer-events-none">
+            <div class="text-white pointer-events-auto">
+                <span class="text-xs text-gray-300 block leading-none">Inspeccionando lista</span>
+                <span class="font-bold text-sm md:text-base" id="modal-title"></span>
+            </div>
+            <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors pointer-events-auto flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+        
+        <!-- Viewport & Carrusel -->
+        <div class="flex-1 relative overflow-hidden" id="modal-viewport">
+            
+            <!-- Botón Anterior -->
+            <button id="btn-prev" class="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/10 hover:bg-white/30 text-white z-20 flex items-center justify-center backdrop-blur transition-all drop-shadow-lg">
+                <i class="fa-solid fa-chevron-left text-xl md:text-2xl pr-1"></i>
+            </button>
+
+            <!-- Imagen -->
+            <div id="modal-image-container">
+                <img id="modal-image" src="" alt="Cargando imagen o archivo no encontrado..." class="text-gray-500 text-center text-xs px-10">
+            </div>
+
+            <!-- Botón Siguiente -->
+            <button id="btn-next" class="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/10 hover:bg-white/30 text-white z-20 flex items-center justify-center backdrop-blur transition-all drop-shadow-lg">
+                <i class="fa-solid fa-chevron-right text-xl md:text-2xl pl-1"></i>
+            </button>
+
+        </div>
+
+        <!-- Controles Flotantes Inferiores -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-[#1e1e1e]/90 backdrop-blur-md p-1.5 rounded-full border border-gray-700/50 shadow-2xl z-30">
+            <button id="zoom-out" class="w-10 h-10 rounded-full text-gray-300 hover:bg-white/10 hover:text-white transition-colors"><i class="fa-solid fa-minus"></i></button>
+            <div class="px-2 text-white font-mono text-xs w-14 text-center select-none" id="zoom-level">100%</div>
+            <button id="zoom-in" class="w-10 h-10 rounded-full text-gray-300 hover:bg-white/10 hover:text-white transition-colors"><i class="fa-solid fa-plus"></i></button>
+            <div class="w-px h-6 bg-gray-600 mx-1"></div>
+            <button id="reset-zoom" class="w-10 h-10 rounded-full text-gray-300 hover:bg-white/10 hover:text-white transition-colors" title="Centrar"><i class="fa-solid fa-expand"></i></button>
+        </div>
+
+    </div>
+
+    <script>
+        const sessions = [
+            { id: 0, date: "2026-08-06", label: "06 Ago", image: "Assents/Listas/01. Aug 06 2026.jpg", type: "class" },
+            { id: 1, date: "2026-08-13", label: "13 Ago", image: "Assents/Listas/02. Aug 13 2026.jpg", type: "class" },
+            { id: 2, date: "2026-08-20", label: "20 Ago", image: "Assents/Listas/03. Aug 20 2026.jpg", type: "class" },
+            { id: 3, date: "2026-08-27", label: "27 Ago", type: "assignment" },
+            { id: 4, date: "2026-09-03", label: "03 Sep", image: "Assents/Listas/04. Sep 03 2026.jpg", type: "class" },
+            { id: 5, date: "2026-09-10", label: "10 Sep", image: "Assents/Listas/05. Sep 10 2026.jpg", type: "class" },
+            { id: 6, date: "2026-09-17", label: "17 Sep", image: "Assents/Listas/06. Sep 17 2026.jpg", type: "class" },
+            { id: 7, date: "2026-09-24", label: "24 Sep", image: "Assents/Listas/07. Sep 24 2026.jpg", type: "class" }
+        ];
+
+        let students = [
+            {"name": "DANNA VEGA VILLAMIZAR", "attendance": [true, true, true, null, true, false, true, true], "notes": {}},
+            {"name": "JENNIFER DAVILA PINZON", "attendance": [true, true, true, null, true, true, false, true], "notes": {}},
+            {"name": "JHONATAN SORIANO AGUIRRE", "attendance": [true, true, false, null, true, false, true, false], "notes": {}},
+            {"name": "JOSE DAVID FONSECA CASTRO", "attendance": [false, false, false, null, true, true, false, false], "notes": {}},
+            {"name": "JUAN ESTEBAN ARIAS TREJOS", "attendance": [false, true, true, null, true, true, false, true], "notes": {}},
+            {"name": "JUAN MARTINEZ ESPITIA", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+            {"name": "JUAN PABLO CORREDOR PALACIOS", "attendance": [true, false, true, null, false, false, false, false], "notes": {}},
+            {"name": "KAREN YULY MONTOYA BOLAÑOS", "attendance": [true, true, true, null, true, true, false, true], "notes": {}},
+            {"name": "KAROLL MICHAEL CASTRO GARCIA", "attendance": [false, true, false, null, true, false, true, true], "notes": {}},
+            {"name": "LAURA CAMILA GUIZA HERRERA", "attendance": [false, true, false, null, false, false, false, false], "notes": {}},
+            {"name": "LAURA SHANAIA HERNANDEZ GARCIA", "attendance": [true, true, true, null, true, false, true, true], "notes": {}},
+            {"name": "LUISA AYALA SALINAS", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+            {"name": "LUNA CALDERON RIVERA", "attendance": [true, true, true, null, true, false, true, true], "notes": {}},
+            {"name": "LUNA JIMENEZ SANTAMARIA", "attendance": [true, true, false, null, true, true, true, true], "notes": {}},
+            {"name": "MARIA PUENTES ROJAS", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+            {"name": "MARIA RIAÑO GALINDO", "attendance": [true, true, false, null, true, true, true, true], "notes": {}},
+            {"name": "MARIANA PINZON CHACON", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+            {"name": "MARIANA SILVA PORRAS", "attendance": [true, true, true, null, true, false, true, false], "notes": {}},
+            {"name": "MARTHA RODRIGUEZ PATIÑO", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+            {"name": "MARY ESCOBAR MEJIA", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+            {"name": "NICOL NIÑO POLANIA", "attendance": [true, true, true, null, true, true, true, false], "notes": {}},
+            {"name": "NICOLLE ALVAREZ HERRERA", "attendance": [true, false, true, null, true, false, true, true], "notes": {}},
+            {"name": "SARA CASTELLANOS HERNANDEZ", "attendance": [true, false, false, null, true, true, true, true], "notes": {}},
+            {"name": "VALENTINA VELANDIA RODRÍGUEZ", "attendance": [true, true, true, null, true, true, true, true], "notes": {"2": true, "4": true, "5": true}},
+            {"name": "VERONICA BENITEZ GOMEZ", "attendance": [true, true, true, null, false, true, true, true], "notes": {}},
+            {"name": "WILLIAM FONSECA VALERO", "attendance": [true, true, true, null, true, true, true, true], "notes": {}},
+            {"name": "JUAN DAVID CASTELLANOS ROPERO", "attendance": [true, false, false, null, false, false, false, false], "notes": {}}
+        ];
+
+        const levelConfig = {
+            7: { icon: 'fa-face-laugh-beam', color: 'text-green-500', name: '100%' },
+            6: { icon: 'fa-face-smile-wink', color: 'text-lime-500', name: '86%' },
+            5: { icon: 'fa-face-smile', color: 'text-green-400', name: '71%' },
+            4: { icon: 'fa-face-meh', color: 'text-yellow-400', name: '57%' },
+            3: { icon: 'fa-face-frown-open', color: 'text-orange-400', name: '43%' },
+            2: { icon: 'fa-face-frown', color: 'text-orange-500', name: '29%' },
+            1: { icon: 'fa-face-sad-tear', color: 'text-red-400', name: '14%' },
+            0: { icon: 'fa-face-dizzy', color: 'text-red-600', name: '0%' }
+        };
+
+        const validClassesCount = sessions.filter(s => s.type === 'class').length;
+        let totalAttendedGlobal = 0;
+        let totalPossibleGlobal = students.length * validClassesCount;
+
+        // Solo las sesiones con imagen física para el carrusel
+        const imageSessions = sessions.filter(s => s.type === 'class' && s.image);
+
+        students.forEach(s => {
+            let attended = 0;
+            sessions.forEach(sess => {
+                if(sess.type === 'class' && s.attendance[sess.id] === true) {
+                    attended++;
+                    totalAttendedGlobal++;
+                }
+            });
+            s.attended = attended;
+            s.pct = Math.round((attended / validClassesCount) * 100);
+            const cfg = levelConfig[attended] || levelConfig[0];
+            s.rankIcon = cfg.icon;
+            s.rankColor = cfg.color;
+        });
+
+        students.sort((a, b) => {
+            if(b.pct !== a.pct) return b.pct - a.pct;
+            return a.name.localeCompare(b.name);
+        });
+
+        const dailyTotals = sessions.map(sess => {
+            if(sess.type !== 'class') return null;
+            let attendedCount = 0;
+            students.forEach(s => {
+                if(s.attendance[sess.id] === true) attendedCount++;
+            });
+            return {
+                count: attendedCount,
+                pct: Math.round((attendedCount / students.length) * 100)
+            };
+        });
+
+        function render() {
+            document.getElementById('stat-students').textContent = students.length;
+            document.getElementById('stat-classes').textContent = validClassesCount;
+            const avgOverall = Math.round((totalAttendedGlobal / totalPossibleGlobal) * 100);
+            document.getElementById('stat-avg').textContent = `${avgOverall}%`;
+
+            const legendContainer = document.getElementById('rank-legend');
+            let legendHtml = '';
+            
+            // Recolectar solo las fracciones de asistencia que existen en la clase (y siempre el 0)
+            const activeCounts = new Set();
+            students.forEach(s => activeCounts.add(s.attended));
+            activeCounts.add(0); // Siempre forzar mostrar el 0%
+
+            const activeCountsSorted = Array.from(activeCounts).sort((a, b) => b - a);
+
+            activeCountsSorted.forEach(count => {
+                const cfg = levelConfig[count];
+                if(cfg) {
+                    legendHtml += `
+                        <div class="flex items-center gap-1">
+                            <i class="fa-solid ${cfg.icon} ${cfg.color} text-xs md:text-sm"></i>
+                            <span class="text-[9px] md:text-[10px] text-gray-500 font-medium">${cfg.name}</span>
+                        </div>
+                    `;
+                }
+            });
+            
+            legendContainer.innerHTML = legendHtml;
+
+            const headerRow = document.getElementById('table-header');
+            sessions.forEach(sess => {
+                if(sess.type === 'assignment') {
+                    const th = document.createElement('th');
+                    th.className = 'px-1 py-1.5 md:p-2 text-center min-w-[50px] md:min-w-[70px] bg-gray-50 border-b border-gray-200 sticky-header';
+                    th.innerHTML = `<span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider block leading-tight">${sess.label}</span>`;
+                    headerRow.appendChild(th);
+                } else {
+                    const th = document.createElement('th');
+                    th.className = 'px-1 py-1.5 md:p-2 text-center min-w-[50px] md:min-w-[70px] hover:bg-gray-100 transition-colors cursor-pointer group border-b border-gray-200 sticky-header';
+                    th.onclick = () => {
+                        const idx = imageSessions.findIndex(is => is.id === sess.id);
+                        if (idx !== -1) openModalByIndex(idx);
+                    };
+                    th.innerHTML = `
+                        <div class="flex flex-col items-center gap-0.5">
+                            <span class="text-[9px] text-poli-navy font-bold uppercase tracking-wider">${sess.label}</span>
+                            <i class="fa-solid fa-camera text-gray-300 group-hover:text-poli-blue transition-colors text-[10px]"></i>
+                        </div>
+                    `;
+                    headerRow.appendChild(th);
+                }
+            });
+
+            const tbody = document.getElementById('attendance-body');
+            students.forEach((s) => {
+                const tr = document.createElement('tr');
+                tr.className = 'row-hover bg-white transition-colors';
+                
+                let html = `
+                    <td class="px-2 py-1.5 md:p-2 pl-2 md:pl-4 sticky-col">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid ${s.rankIcon} ${s.rankColor} w-4 text-center text-xs md:text-sm"></i>
+                            <span class="font-medium text-gray-800 capitalize text-[10px] md:text-xs truncate max-w-[120px] md:max-w-[200px]" title="${s.name}">${s.name.toLowerCase()}</span>
+                        </div>
+                    </td>
+                    <td class="px-1 py-1.5 md:p-2 text-center border-r border-gray-100 bg-gray-50/30">
+                        <span class="text-[9px] md:text-[10px] font-semibold ${s.pct >= 70 ? 'text-green-600' : (s.pct >= 40 ? 'text-yellow-600' : 'text-red-500')}">
+                            ${s.attended}/${validClassesCount} <span class="opacity-60 font-normal">(${s.pct}%)</span>
+                        </span>
+                    </td>
+                `;
+
+                sessions.forEach(sess => {
+                    if(sess.type === 'assignment') {
+                        html += `
+                        <td class="px-1 py-1.5 md:p-2 text-center bg-gray-50/50 tooltip relative cursor-help">
+                            <i class="fa-solid fa-ban text-gray-300 text-[10px] md:text-xs"></i>
+                        </td>`;
+                    } else {
+                        const status = s.attendance[sess.id];
+                        const note = s.notes[sess.id];
+                        
+                        html += `<td class="px-1 py-1.5 md:p-2 text-center border-r border-gray-50">`;
+                        if(status === true) {
+                            if(note) {
+                                html += `<i class="fa-solid fa-circle-check text-yellow-400 text-sm md:text-base"></i>`;
+                            } else {
+                                html += `<i class="fa-solid fa-circle-check text-green-500 text-sm md:text-base"></i>`;
+                            }
+                        } else {
+                            html += `<i class="fa-solid fa-circle-xmark text-red-400 text-sm md:text-base opacity-80"></i>`;
+                        }
+                        html += `</td>`;
+                    }
+                });
+
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
+            });
+
+            const footerRow = document.getElementById('table-footer');
+            let fHtml = `
+                <td class="p-2 pl-4 sticky-col border-t border-gray-200 text-right text-poli-navy text-[9px] uppercase font-bold tracking-wider bg-gray-50">
+                    Asistencia Diaria
+                </td>
+                <td class="p-2 text-center border-r border-t border-gray-200 bg-gray-50"></td>
+            `;
+
+            sessions.forEach((sess, idx) => {
+                if(sess.type === 'assignment') {
+                    fHtml += `<td class="bg-gray-50 border-t border-gray-200"></td>`;
+                } else {
+                    const dt = dailyTotals[idx];
+                    const colorClass = dt.pct >= 70 ? 'text-green-600' : (dt.pct >= 50 ? 'text-yellow-600' : 'text-red-500');
+                    fHtml += `
+                        <td class="p-1 md:p-2 text-center border-r border-t border-gray-200 bg-white">
+                            <div class="flex flex-col items-center">
+                                <span class="font-medium text-[8px] md:text-[9px] text-gray-400 mb-0.5">${dt.count}/${students.length}</span>
+                                <span class="font-bold text-[9px] md:text-[10px] ${colorClass}">${dt.pct}%</span>
+                            </div>
+                        </td>
+                    `;
+                }
+            });
+            footerRow.innerHTML = fHtml;
+        }
+
+        document.addEventListener('DOMContentLoaded', render);
+
+        // Lógica Modal + Carrusel
+        const modal = document.getElementById('image-modal');
+        const img = document.getElementById('modal-image');
+        const zoomText = document.getElementById('zoom-level');
+        const container = document.getElementById('modal-image-container');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        
+        let scale = 1, dragX = 0, dragY = 0, isDragging = false, startX, startY;
+        let currentSessionIndex = -1;
+
+        function updateTransform() {
+            img.style.transform = `translate(calc(-50% + ${dragX}px), calc(-50% + ${dragY}px)) scale(${scale})`;
+            zoomText.textContent = `${Math.round(scale * 100)}%`;
+        }
+
+        function resetView() {
+            scale = 1;
+            dragX = 0;
+            dragY = 0;
+            updateTransform();
+        }
+
+        function openModalByIndex(index) {
+            if (index < 0 || index >= imageSessions.length) return;
+            
+            currentSessionIndex = index;
+            const sess = imageSessions[index];
+
+            document.getElementById('modal-title').textContent = sess.label;
+            
+            // Limpiar la imagen primero para efecto de carga rápida
+            img.src = ""; 
+            setTimeout(() => { img.src = sess.image; }, 50);
+
+            // Gestionar botones del carrusel
+            btnPrev.style.display = currentSessionIndex === 0 ? 'none' : 'flex';
+            btnNext.style.display = currentSessionIndex === imageSessions.length - 1 ? 'none' : 'flex';
+
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                void modal.offsetWidth;
+                modal.classList.remove('opacity-0');
+                document.body.style.overflow = 'hidden'; 
+            }
+            
+            resetView();
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                img.src = '';
+                document.body.style.overflow = 'auto';
+                currentSessionIndex = -1;
+            }, 300);
+        }
+
+        // Navegación Carrusel
+        btnPrev.addEventListener('click', () => openModalByIndex(currentSessionIndex - 1));
+        btnNext.addEventListener('click', () => openModalByIndex(currentSessionIndex + 1));
+
+        // Drag events
+        container.addEventListener('mousedown', (e) => {
+            // No iniciar drag si hace clic en los botones
+            if(e.target.closest('button')) return;
+            e.preventDefault(); isDragging = true;
+            startX = e.clientX - dragX; startY = e.clientY - dragY;
+        });
+
+        container.addEventListener('touchstart', (e) => {
+            if(e.target.closest('button')) return;
+            if(e.touches.length === 1) {
+                isDragging = true;
+                startX = e.touches[0].clientX - dragX;
+                startY = e.touches[0].clientY - dragY;
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if(!isDragging) return;
+            dragX = e.clientX - startX; dragY = e.clientY - startY;
+            updateTransform();
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if(!isDragging || e.touches.length !== 1) return;
+            dragX = e.touches[0].clientX - startX; dragY = e.touches[0].clientY - startY;
+            updateTransform();
+        });
+
+        window.addEventListener('mouseup', () => { isDragging = false; });
+        window.addEventListener('touchend', () => { isDragging = false; });
+        container.addEventListener('mouseleave', () => { isDragging = false; });
+
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomAmount = 0.15;
+            if(e.deltaY < 0) scale = Math.min(scale + zoomAmount, 5);
+            else scale = Math.max(scale - zoomAmount, 0.2);
+            updateTransform();
+        });
+
+        document.getElementById('zoom-in').addEventListener('click', () => { scale = Math.min(scale + 0.25, 5); updateTransform(); });
+        document.getElementById('zoom-out').addEventListener('click', () => { scale = Math.max(scale - 0.25, 0.2); updateTransform(); });
+        document.getElementById('reset-zoom').addEventListener('click', resetView);
+
+        // Teclado (Navegación + Zoom)
+        document.addEventListener('keydown', (e) => {
+            if(!modal.classList.contains('hidden')) {
+                if(e.key === 'Escape') closeModal();
+                else if(e.key === 'ArrowRight') openModalByIndex(currentSessionIndex + 1);
+                else if(e.key === 'ArrowLeft') openModalByIndex(currentSessionIndex - 1);
+            }
+        });
+    </script>
+</body>
+</html>
